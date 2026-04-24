@@ -1,21 +1,59 @@
-# ImageClassification
+﻿# Visual Asset Triage Portal
 
 ## Overview
 
-The **Image Classification Web Application** is a user-friendly tool built using Flask and TensorFlow that allows users to upload images and classify them using a pre-trained machine learning model. This application is designed to demonstrate the capabilities of image classification through deep learning techniques while providing an intuitive web interface.
+Visual Asset Triage Portal is a Flask-based internal review tool for uploading images, assigning workflow context, and generating a lightweight categorization summary for business teams.
 
-## Features
+This project is positioned as a recruiter-ready Python web application and internal-tool prototype. It upgrades a rough image-classification concept into a more practical workflow for marketing, e-commerce, documentation, and internal content review.
 
-- **Image Upload**: Users can easily upload images for classification.
-- **Pre-trained Model**: Utilizes the MobileNetV2 model for efficient and accurate image classification.
-- **Real-time Predictions**: Displays the top predicted classes along with their confidence scores.
-- **Responsive Design**: The web interface is optimized for both desktop and mobile devices.
-- **User-friendly Interface**: Clean and modern UI with Bootstrap styling for an enhanced user experience.
+## Real-World Business Use Case
 
-## Technologies Used
+This project maps to practical workflows used by:
 
-- **Python**: The programming language used for backend development.
-- **Flask**: A lightweight web framework for building the web application.
-- **TensorFlow**: A deep learning framework used for image classification.
-- **Bootstrap**: A CSS framework for responsive and attractive UI design.
-- **HTML/CSS**: For structuring and styling the web application.
+- Marketing Operations Teams
+- Ecommerce Content Teams
+- Internal Documentation Review
+- Brand Asset Review Workflows
+- Small Internal Operations Tools
+
+A team may need to answer questions such as:
+
+- What workflow should this asset belong to?
+- Is this image likely to be a marketing creative, product asset, document snapshot, or general visual asset?
+- What file type and basic intake details should be reviewed before approval?
+- How can lightweight image review be handled through a simple internal portal?
+
+This portal is useful for intake review, lightweight asset triage, and prototype demonstration of a practical business-facing Flask app.
+
+## Key Features
+
+- Image Upload Workflow
+- Workflow Context Selection
+- Suggested Asset Categorization
+- File Type And File Size Summary
+- Preview Panel For Uploaded Assets
+- Lightweight Review Notes
+- Simple Internal Tool Positioning
+
+## Tech Stack
+
+- Python
+- Flask
+- HTML
+- CSS
+
+## Repository Contents
+
+- `app.py`
+- `templates/index.html`
+- `static/styles.css`
+- `requirements.txt`
+- `README.md`
+
+## How To Run
+
+### 1. Create And Activate A Virtual Environment
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1

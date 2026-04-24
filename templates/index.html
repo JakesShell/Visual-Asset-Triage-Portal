@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Asset Triage Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header class="hero">
+        <div class="hero-inner">
+            <p class="eyebrow">Operations Review Tool</p>
+            <h1>Visual Asset Triage Portal</h1>
+            <p class="hero-text">
+                Upload an image, assign a workflow context, and generate a lightweight intake summary for marketing, e-commerce, and internal content review.
+            </p>
+        </div>
+    </header>
+
+    <main class="page-shell">
+        <section class="panel">
+            <h2>Asset Intake</h2>
+
+            {% if error %}
+                <div class="alert">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST" enctype="multipart/form-data" class="upload-form">
+                <div class="form-grid">
+                    <div class="field-group">
+                        <label for="workflow">Workflow</label>
+                        <select id="workflow" name="workflow">
+                            <option>Marketing Operations</option>
+                            <option>Ecommerce Content</option>
+                            <option>Documentation Review</option>
+                            <option>Internal Knowledge Base</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="file">Image File</label>
+                        <input id="file" type="file" name="file" accept="image/*" required>
+                    </div>
+                </div>
+
+                <button type="submit">Upload And Review</button>
+            </form>
+        </section>
+
+        {% if result %}
+        <section class="panel result-panel">
+            <h2>Review Summary</h2>
+
+            <div class="result-grid">
+                <article class="card">
+                    <h3>Workflow</h3>
+                    <p>{{ result.workflow }}</p>
+                </article>
+
+                <article class="card">
+                    <h3>Suggested Category</h3>
+                    <p>{{ result.asset_category }}</p>
+                </article>
+
+                <article class="card">
+                    <h3>File Type</h3>
+                    <p>{{ result.file_extension }}</p>
+                </article>
+
+                <article class="card">
+                    <h3>File Size</h3>
+                    <p>{{ result.file_size_kb }} KB</p>
+                </article>
+            </div>
+
+            <div class="preview-grid">
+                <div class="preview-card">
+                    <h3>Asset Preview</h3>
+                    <img src="{{ url_for('static', filename=result.image_path) }}" alt="Uploaded asset preview">
+                </div>
+
+                <div class="preview-card">
+                    <h3>Review Notes</h3>
+                    <p><strong>Original File:</strong> {{ result.original_name }}</p>
+                    <p>{{ result.review_notes }}</p>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+    </main>
+
+    <footer class="footer">
+        <p>Visual Asset Triage Portal • Portfolio Project</p>
+    </footer>
+</body>
+</html>
