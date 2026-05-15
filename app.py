@@ -351,10 +351,28 @@ def decision(asset_id: str):
     reviewer = request.form.get("reviewer", "AssetLens Reviewer").strip() or "AssetLens Reviewer"
     notes = request.form.get("review_notes", "").strip()
 
-    allowed_decisions = {"Approved", "Rejected", "Needs Metadata", "Compliance Review", "Client Approval"}
+    allowed_decisions = {"Approved", "Approved With Exception", "Rejected", "Needs Metadata", "Compliance Review", "Client Approval"}
 
     if decision_value not in allowed_decisions:
         flash("Invalid review decision.", "error")
+        return redirect(url_for("asset_detail", asset_id=asset_id))
+
+    evaluated_asset = enrich_asset(asset.copy())
+    unsafe_for_normal_approval = (
+        evaluated_asset["risk_level"] == "High"
+        or evaluated_asset["governance_risk_score"] >= 70
+        or evaluated_asset.get("usage_rights") in {"Unknown", "Not Provided", "Expires Soon", ""}
+    )
+
+    if decision_value == "Approved" and unsafe_for_normal_approval:
+        flash(
+            "Normal approval is blocked for this asset. Confirm usage rights, reduce risk, or use Approved With Exception with reviewer notes.",
+            "error",
+        )
+        return redirect(url_for("asset_detail", asset_id=asset_id))
+
+    if decision_value == "Approved With Exception" and len(notes) < 12:
+        flash("Approved With Exception requires clear reviewer notes explaining the override.", "error")
         return redirect(url_for("asset_detail", asset_id=asset_id))
 
     asset["review_status"] = decision_value

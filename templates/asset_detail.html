@@ -55,6 +55,13 @@
                 <p>Workflow Route: <strong>{{ asset.workflow_route }}</strong></p>
             </div>
 
+            {% if asset.risk_level == "High" or asset.usage_rights in ["Unknown", "Not Provided", "Expires Soon", ""] %}
+                <div class="governance-alert">
+                    <strong>Approval Control Active</strong>
+                    <p>Normal approval is blocked until usage rights are confirmed or an executive-approved exception is documented.</p>
+                </div>
+            {% endif %}
+
             <div class="score-grid">
                 <div>
                     <span>Metadata Quality</span>
@@ -106,6 +113,7 @@
                 <label>Decision
                     <select name="decision">
                         <option>Approved</option>
+                        <option>Approved With Exception</option>
                         <option>Needs Metadata</option>
                         <option>Compliance Review</option>
                         <option>Client Approval</option>

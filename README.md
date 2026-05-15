@@ -30,7 +30,7 @@ The system helps teams answer:
 - Governance risk scoring
 - Workflow routing recommendations
 - Review queue with asset cards
-- Approval, rejection, metadata request, compliance review, and client approval statuses
+- Approval, Approved With Exception, rejection, metadata request, compliance review, and client approval statuses
 - Asset detail review page
 - Audit trail for upload and decision history
 - Demo data loader for quick portfolio walkthroughs
@@ -61,6 +61,8 @@ This portfolio version includes:
 - Server-generated file identifiers
 - Image validation before asset registration
 - Review statuses to prevent unapproved release
+- Approval blocking for high-risk assets or assets with unknown usage rights
+- Approved With Exception workflow requiring reviewer notes
 - Audit logging for governance decisions
 
 Future production hardening should include user authentication, role-based access control, CSRF protection, private object storage, malware scanning, signed download URLs, SSO, tenant isolation, database-backed persistence, and full compliance reporting.

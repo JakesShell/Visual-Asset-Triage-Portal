@@ -709,3 +709,24 @@ textarea {
         grid-template-columns: 1fr;
     }
 }
+
+
+.governance-alert {
+    margin-top: 16px;
+    padding: 16px;
+    border-radius: 18px;
+    color: var(--red);
+    background: var(--red-soft);
+    border: 1px solid rgba(184, 71, 71, 0.18);
+}
+
+.governance-alert strong {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.governance-alert p {
+    margin: 0;
+    color: var(--red);
+    line-height: 1.55;
+}
