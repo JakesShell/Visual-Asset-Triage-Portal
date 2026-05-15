@@ -2,95 +2,267 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>AssetLens | Visual Governance Portal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visual Asset Triage Portal</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <header class="hero">
-        <div class="hero-inner">
-            <p class="eyebrow">Operations Review Tool</p>
-            <h1>Visual Asset Triage Portal</h1>
-            <p class="hero-text">
-                Upload an image, assign a workflow context, and generate a lightweight intake summary for marketing, e-commerce, and internal content review.
-            </p>
+<div class="shell">
+    <aside class="sidebar">
+        <div class="brand-mark">
+            <div class="brand-icon">AL</div>
+            <div>
+                <p class="eyebrow">AssetLens</p>
+                <h1>Visual Governance</h1>
+            </div>
         </div>
-    </header>
 
-    <main class="page-shell">
-        <section class="panel">
-            <h2>Asset Intake</h2>
+        <nav class="nav-stack">
+            <a href="#dashboard" class="active">Command Center</a>
+            <a href="#upload">Asset Intake</a>
+            <a href="#queue">Review Queue</a>
+            <a href="#audit">Audit Trail</a>
+        </nav>
 
-            {% if error %}
-                <div class="alert">{{ error }}</div>
+        <div class="side-card">
+            <p class="eyebrow">CEO Product Direction</p>
+            <h3>Premium B2B Asset Workflow</h3>
+            <p>Built for approval, governance, compliance review, and client-ready visual asset control.</p>
+        </div>
+    </aside>
+
+    <main class="main">
+        <section class="hero" id="dashboard">
+            <div>
+                <p class="eyebrow">Internal SaaS Operations Portal</p>
+                <h2>Review, score, route, and safely approve visual assets before they go public.</h2>
+                <p class="hero-copy">
+                    AssetLens turns messy image intake into a governed review workflow with metadata scoring,
+                    rights checks, audit trails, and operational triage.
+                </p>
+                <div class="hero-actions">
+                    <a class="button primary" href="#upload">Upload Asset</a>
+                    <a class="button secondary" href="{{ url_for('seed_demo_data') }}">Load Demo Data</a>
+                </div>
+            </div>
+
+            <div class="hero-panel">
+                <div class="pulse-ring"></div>
+                <p class="eyebrow">Governance Score</p>
+                <strong>{{ metrics.avg_metadata }}%</strong>
+                <span>Average metadata quality across reviewed assets</span>
+            </div>
+        </section>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-stack">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
             {% endif %}
+        {% endwith %}
 
-            <form method="POST" enctype="multipart/form-data" class="upload-form">
-                <div class="form-grid">
-                    <div class="field-group">
-                        <label for="workflow">Workflow</label>
-                        <select id="workflow" name="workflow">
-                            <option>Marketing Operations</option>
-                            <option>Ecommerce Content</option>
-                            <option>Documentation Review</option>
-                            <option>Internal Knowledge Base</option>
-                        </select>
-                    </div>
-
-                    <div class="field-group">
-                        <label for="file">Image File</label>
-                        <input id="file" type="file" name="file" accept="image/*" required>
-                    </div>
-                </div>
-
-                <button type="submit">Upload And Review</button>
-            </form>
+        <section class="metric-grid">
+            <article class="metric-card">
+                <span>Total Assets</span>
+                <strong>{{ metrics.total }}</strong>
+                <p>Registered in the review system</p>
+            </article>
+            <article class="metric-card">
+                <span>Pending Review</span>
+                <strong>{{ metrics.pending }}</strong>
+                <p>Waiting for reviewer action</p>
+            </article>
+            <article class="metric-card danger">
+                <span>High Risk</span>
+                <strong>{{ metrics.high_risk }}</strong>
+                <p>Need compliance or rights review</p>
+            </article>
+            <article class="metric-card success">
+                <span>Approved</span>
+                <strong>{{ metrics.approved }}</strong>
+                <p>Ready for controlled release</p>
+            </article>
         </section>
 
-        {% if result %}
-        <section class="panel result-panel">
-            <h2>Review Summary</h2>
+        <section class="content-grid">
+            <article class="panel upload-panel" id="upload">
+                <div class="section-heading">
+                    <p class="eyebrow">Asset Intake</p>
+                    <h2>Upload new visual asset</h2>
+                    <p>Add governance metadata so AssetLens can route and risk-score the file.</p>
+                </div>
 
-            <div class="result-grid">
-                <article class="card">
-                    <h3>Workflow</h3>
-                    <p>{{ result.workflow }}</p>
-                </article>
+                <form class="upload-form" action="{{ url_for('upload_asset') }}" method="POST" enctype="multipart/form-data">
+                    <label class="file-zone">
+                        <input type="file" name="asset_file" accept=".png,.jpg,.jpeg,.webp" required>
+                        <span>Drop or choose PNG, JPG, JPEG, or WEBP</span>
+                    </label>
 
-                <article class="card">
-                    <h3>Suggested Category</h3>
-                    <p>{{ result.asset_category }}</p>
-                </article>
+                    <div class="form-grid">
+                        <label>Campaign Name
+                            <input type="text" name="campaign_name" placeholder="Q4 Brand Refresh">
+                        </label>
 
-                <article class="card">
-                    <h3>File Type</h3>
-                    <p>{{ result.file_extension }}</p>
-                </article>
+                        <label>Department
+                            <select name="department">
+                                <option value="">Select Department</option>
+                                <option>Marketing</option>
+                                <option>Brand</option>
+                                <option>E-commerce</option>
+                                <option>Healthcare</option>
+                                <option>Education</option>
+                                <option>Legal</option>
+                                <option>Operations</option>
+                            </select>
+                        </label>
 
-                <article class="card">
-                    <h3>File Size</h3>
-                    <p>{{ result.file_size_kb }} KB</p>
-                </article>
+                        <label>Asset Type
+                            <select name="asset_type">
+                                <option value="">Select Asset Type</option>
+                                <option>Hero Image</option>
+                                <option>Product Image</option>
+                                <option>Paid Ad</option>
+                                <option>Social Media</option>
+                                <option>Client Proof</option>
+                                <option>Documentation Image</option>
+                            </select>
+                        </label>
+
+                        <label>Usage Rights
+                            <select name="usage_rights">
+                                <option>Unknown</option>
+                                <option>Confirmed</option>
+                                <option>Expires Soon</option>
+                                <option>Not Provided</option>
+                            </select>
+                        </label>
+
+                        <label>Publish Channel
+                            <select name="publish_channel">
+                                <option value="">Select Channel</option>
+                                <option>Website</option>
+                                <option>Paid Ads</option>
+                                <option>Social Media</option>
+                                <option>Product Page</option>
+                                <option>Client Portal</option>
+                                <option>Internal Documentation</option>
+                            </select>
+                        </label>
+
+                        <label>Urgency
+                            <select name="urgency">
+                                <option>Normal</option>
+                                <option>High</option>
+                                <option>Critical</option>
+                            </select>
+                        </label>
+
+                        <label>Owner
+                            <input type="text" name="owner" placeholder="Marketing Operations">
+                        </label>
+
+                        <label class="wide">Description
+                            <textarea name="description" rows="4" placeholder="Describe what this image is and where it will be used."></textarea>
+                        </label>
+                    </div>
+
+                    <button class="button primary full" type="submit">Run AssetLens Triage</button>
+                </form>
+            </article>
+
+            <article class="panel audit-panel" id="audit">
+                <div class="section-heading">
+                    <p class="eyebrow">Audit Trail</p>
+                    <h2>Recent governance activity</h2>
+                    <p>Every decision matters. AssetLens records the route from intake to approval.</p>
+                </div>
+
+                <div class="timeline">
+                    {% if logs %}
+                        {% for log in logs %}
+                            <div class="timeline-item">
+                                <span></span>
+                                <div>
+                                    <strong>{{ log.action }}</strong>
+                                    <p>{{ log.details }}</p>
+                                    <small>{{ log.actor }} · {{ log.timestamp }}</small>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            <strong>No audit events yet.</strong>
+                            <p>Upload an asset or load demo data to populate the governance trail.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </article>
+        </section>
+
+        <section class="panel queue-panel" id="queue">
+            <div class="section-heading row">
+                <div>
+                    <p class="eyebrow">Review Queue</p>
+                    <h2>Assets awaiting workflow decisions</h2>
+                </div>
+                <span class="queue-count">{{ assets|length }} assets tracked</span>
             </div>
 
-            <div class="preview-grid">
-                <div class="preview-card">
-                    <h3>Asset Preview</h3>
-                    <img src="{{ url_for('static', filename=result.image_path) }}" alt="Uploaded asset preview">
-                </div>
+            <div class="asset-grid">
+                {% if assets %}
+                    {% for asset in assets %}
+                        <article class="asset-card">
+                            <div class="asset-preview">
+                                {% if asset.stored_file_name %}
+                                    <img src="{{ url_for('uploaded_file', filename=asset.stored_file_name) }}" alt="{{ asset.original_file_name }}">
+                                {% else %}
+                                    <div class="placeholder-preview">
+                                        <span>{{ asset.file_type }}</span>
+                                    </div>
+                                {% endif %}
+                                <span class="priority">{{ asset.priority }}</span>
+                            </div>
 
-                <div class="preview-card">
-                    <h3>Review Notes</h3>
-                    <p><strong>Original File:</strong> {{ result.original_name }}</p>
-                    <p>{{ result.review_notes }}</p>
-                </div>
+                            <div class="asset-body">
+                                <div class="asset-title-row">
+                                    <h3>{{ asset.campaign_name or "Untitled Campaign" }}</h3>
+                                    <span class="badge status">{{ asset.review_status }}</span>
+                                </div>
+
+                                <p>{{ asset.original_file_name }}</p>
+
+                                <div class="badge-row">
+                                    <span class="badge risk-{{ asset.risk_level|lower }}">{{ asset.risk_level }} Risk</span>
+                                    <span class="badge">{{ asset.workflow_route }}</span>
+                                </div>
+
+                                <div class="score-row">
+                                    <div>
+                                        <span>Metadata</span>
+                                        <strong>{{ asset.metadata_score }}%</strong>
+                                    </div>
+                                    <div>
+                                        <span>Risk</span>
+                                        <strong>{{ asset.governance_risk_score }}%</strong>
+                                    </div>
+                                </div>
+
+                                <a class="button secondary full" href="{{ url_for('asset_detail', asset_id=asset.asset_id) }}">Open Review</a>
+                            </div>
+                        </article>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state wide-empty">
+                        <strong>No assets in the queue yet.</strong>
+                        <p>Use the intake form or load demo data to preview the full AssetLens workflow.</p>
+                    </div>
+                {% endif %}
             </div>
         </section>
-        {% endif %}
     </main>
-
-    <footer class="footer">
-        <p>Visual Asset Triage Portal • Portfolio Project</p>
-    </footer>
+</div>
 </body>
 </html>

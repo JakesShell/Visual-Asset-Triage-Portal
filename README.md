@@ -1,59 +1,111 @@
-﻿# Visual Asset Triage Portal
+﻿# AssetLens Visual Governance And Workflow Triage Portal
 
-## Overview
+AssetLens is a premium internal SaaS-style visual asset governance portal. It helps teams upload, inspect, risk-score, route, approve, and audit visual assets before they are used publicly.
 
-Visual Asset Triage Portal is a Flask-based internal review tool for uploading images, assigning workflow context, and generating a lightweight categorization summary for business teams.
+This project upgrades the original Visual Asset Triage Portal into a stronger real-world business system for marketing operations, brand teams, e-commerce teams, compliance reviewers, agencies, and client approval workflows.
 
-This project is positioned as a recruiter-ready Python web application and internal-tool prototype. It upgrades a rough image-classification concept into a more practical workflow for marketing, e-commerce, documentation, and internal content review.
+## Product Direction
 
-## Real-World Business Use Case
+AssetLens is designed as a lightweight visual governance platform, not a basic image upload tool.
 
-This project maps to practical workflows used by:
+It focuses on the operational problem companies face when visual assets move through messy folders, email threads, unclear permissions, and untracked approval decisions.
 
-- Marketing Operations Teams
-- Ecommerce Content Teams
-- Internal Documentation Review
-- Brand Asset Review Workflows
-- Small Internal Operations Tools
+The system helps teams answer:
 
-A team may need to answer questions such as:
+- Is this asset approved?
+- Who owns it?
+- Can we legally use it?
+- Does it have enough metadata?
+- Which workflow should review it?
+- What risk does it carry before publication?
+- Who approved or rejected it?
 
-- What workflow should this asset belong to?
-- Is this image likely to be a marketing creative, product asset, document snapshot, or general visual asset?
-- What file type and basic intake details should be reviewed before approval?
-- How can lightweight image review be handled through a simple internal portal?
+## Core Features
 
-This portal is useful for intake review, lightweight asset triage, and prototype demonstration of a practical business-facing Flask app.
+- Secure image upload intake for PNG, JPG, JPEG, and WEBP files
+- File size protection through Flask upload limits
+- Filename sanitization using Werkzeug secure filename handling
+- Image validation using Pillow
+- Metadata quality scoring
+- Governance risk scoring
+- Workflow routing recommendations
+- Review queue with asset cards
+- Approval, rejection, metadata request, compliance review, and client approval statuses
+- Asset detail review page
+- Audit trail for upload and decision history
+- Demo data loader for quick portfolio walkthroughs
+- Enterprise-style dashboard UI
 
-## Key Features
+## Business Use Case
 
-- Image Upload Workflow
-- Workflow Context Selection
-- Suggested Asset Categorization
-- File Type And File Size Summary
-- Preview Panel For Uploaded Assets
-- Lightweight Review Notes
-- Simple Internal Tool Positioning
+AssetLens could be used by marketing teams, brand teams, creative operations teams, agencies, e-commerce teams, healthcare campaign teams, education marketing departments, franchise businesses, and client approval teams.
+
+## Revenue Model Concept
+
+| Plan | Monthly Price | Setup Fee |
+|---|---:|---:|
+| Starter | $299/month | $500 |
+| Growth | $999/month | $2,500 |
+| Business | $2,500/month | $7,500 |
+| Enterprise | $7,500/month | $20,000 |
+
+The strongest path to $100,000/month is a combination of Growth, Business, and Enterprise customers using AssetLens for controlled approval workflows, client portals, brand compliance, usage rights tracking, and operational reporting.
+
+## Security Model
+
+This portfolio version includes:
+
+- Allowed image extensions only
+- File size limit
+- Safe stored filenames
+- Server-generated file identifiers
+- Image validation before asset registration
+- Review statuses to prevent unapproved release
+- Audit logging for governance decisions
+
+Future production hardening should include user authentication, role-based access control, CSRF protection, private object storage, malware scanning, signed download URLs, SSO, tenant isolation, database-backed persistence, and full compliance reporting.
 
 ## Tech Stack
 
 - Python
 - Flask
+- Pillow
 - HTML
 - CSS
+- JSON-based local data storage for portfolio/demo use
 
-## Repository Contents
+## Run Locally
 
-- `app.py`
-- `templates/index.html`
-- `static/styles.css`
-- `requirements.txt`
-- `README.md`
+PowerShell commands:
 
-## How To Run
+    cd C:\github-audit\Visual-Asset-Triage-Portal
+    python -m venv .venv
+    .\.venv\Scripts\python.exe -m pip install --upgrade pip
+    .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+    .\.venv\Scripts\python.exe app.py
 
-### 1. Create And Activate A Virtual Environment
+Then open this in your browser:
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+    http://127.0.0.1:5000
+
+To load demo records, click Load Demo Data or open:
+
+    http://127.0.0.1:5000/seed
+
+## Portfolio Value
+
+This project demonstrates product thinking, B2B SaaS positioning, secure upload handling, workflow design, operational dashboards, governance logic, risk scoring, metadata validation, audit logging, UI/UX polish, and real-world business relevance.
+
+## Planned Enhancements
+
+- User accounts and team workspaces
+- Role-based permissions
+- Client approval portals
+- Cloud object storage
+- Database persistence
+- AI-assisted image tagging
+- Usage rights expiration tracking
+- Brand rule templates
+- Exportable audit reports
+- Admin billing dashboard
+- API integration layer

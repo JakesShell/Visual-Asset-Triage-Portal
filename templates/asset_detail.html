@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ asset.campaign_name }} | AssetLens Review</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<div class="detail-shell">
+    <header class="detail-header">
+        <a href="{{ url_for('index') }}" class="button secondary">Back to Dashboard</a>
+        <div>
+            <p class="eyebrow">Asset Review</p>
+            <h1>{{ asset.campaign_name or "Untitled Campaign" }}</h1>
+        </div>
+        <span class="badge status">{{ asset.review_status }}</span>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-stack">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <main class="detail-grid">
+        <section class="panel">
+            <div class="large-preview">
+                {% if asset.stored_file_name %}
+                    <img src="{{ url_for('uploaded_file', filename=asset.stored_file_name) }}" alt="{{ asset.original_file_name }}">
+                {% else %}
+                    <div class="placeholder-preview large">
+                        <span>{{ asset.file_type }}</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="asset-summary">
+                <h2>{{ asset.original_file_name }}</h2>
+                <p>{{ asset.description or "No description provided." }}</p>
+            </div>
+        </section>
+
+        <section class="panel">
+            <p class="eyebrow">Governance Intelligence</p>
+            <h2>Risk and routing verdict</h2>
+
+            <div class="verdict-card">
+                <span class="badge risk-{{ asset.risk_level|lower }}">{{ asset.risk_level }} Risk</span>
+                <h3>{{ asset.recommended_action }}</h3>
+                <p>Workflow Route: <strong>{{ asset.workflow_route }}</strong></p>
+            </div>
+
+            <div class="score-grid">
+                <div>
+                    <span>Metadata Quality</span>
+                    <strong>{{ asset.metadata_score }}%</strong>
+                </div>
+                <div>
+                    <span>Governance Risk</span>
+                    <strong>{{ asset.governance_risk_score }}%</strong>
+                </div>
+            </div>
+
+            <div class="risk-list">
+                <h3>Risk Reasons</h3>
+                {% if asset.risk_reasons %}
+                    {% for reason in asset.risk_reasons %}
+                        <p>{{ reason }}</p>
+                    {% endfor %}
+                {% else %}
+                    <p>No major risk indicators detected.</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="panel">
+            <p class="eyebrow">Metadata</p>
+            <h2>Asset record</h2>
+
+            <div class="metadata-table">
+                <div><span>Department</span><strong>{{ asset.department or "Not Provided" }}</strong></div>
+                <div><span>Asset Type</span><strong>{{ asset.asset_type or "Not Provided" }}</strong></div>
+                <div><span>Usage Rights</span><strong>{{ asset.usage_rights or "Unknown" }}</strong></div>
+                <div><span>Publish Channel</span><strong>{{ asset.publish_channel or "Not Provided" }}</strong></div>
+                <div><span>Owner</span><strong>{{ asset.owner or "Not Provided" }}</strong></div>
+                <div><span>Urgency</span><strong>{{ asset.urgency }}</strong></div>
+                <div><span>Dimensions</span><strong>{{ asset.width }} × {{ asset.height }}</strong></div>
+                <div><span>File Size</span><strong>{{ asset.file_size_mb }} MB</strong></div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <p class="eyebrow">Reviewer Decision</p>
+            <h2>Update approval status</h2>
+
+            <form action="{{ url_for('decision', asset_id=asset.asset_id) }}" method="POST" class="review-form">
+                <label>Reviewer
+                    <input type="text" name="reviewer" placeholder="Brand Reviewer">
+                </label>
+
+                <label>Decision
+                    <select name="decision">
+                        <option>Approved</option>
+                        <option>Needs Metadata</option>
+                        <option>Compliance Review</option>
+                        <option>Client Approval</option>
+                        <option>Rejected</option>
+                    </select>
+                </label>
+
+                <label>Review Notes
+                    <textarea name="review_notes" rows="5" placeholder="Write approval notes, compliance concerns, or requested changes."></textarea>
+                </label>
+
+                <button class="button primary full" type="submit">Save Review Decision</button>
+            </form>
+        </section>
+
+        <section class="panel wide-panel">
+            <p class="eyebrow">Audit History</p>
+            <h2>Decision trail</h2>
+
+            <div class="timeline">
+                {% if logs %}
+                    {% for log in logs %}
+                        <div class="timeline-item">
+                            <span></span>
+                            <div>
+                                <strong>{{ log.action }}</strong>
+                                <p>{{ log.details }}</p>
+                                <small>{{ log.actor }} · {{ log.timestamp }}</small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <strong>No audit events for this asset yet.</strong>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

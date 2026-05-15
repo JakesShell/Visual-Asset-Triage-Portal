@@ -1,4 +1,9 @@
+﻿.venv/
 __pycache__/
-.venv/
-static/uploads/*
-*.bak
+*.pyc
+.env
+uploads/*
+!uploads/.gitkeep
+data/assets.json
+data/audit_log.json
+.DS_Store
